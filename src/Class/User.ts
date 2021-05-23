@@ -12,10 +12,9 @@ export default class User {
         this._id = id
         this.position = {x: 44, y: 44}
     }
-
     
     get id(): string { return this._id }
-    
+
     setPosition(position: {x: number, y: number}): void {
         this.position = position
     }

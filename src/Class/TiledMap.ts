@@ -14,12 +14,14 @@ export default class TiledMap {
 
     public static async build(file: string): Promise<TiledMap> {
         const map = new TiledMap()
-        const img = await promises.readFile(path.join(__dirname, `../Assets/Maps/indoor.png`))
         const data = await promises.readFile(path.join(__dirname, `../Assets/Maps/${file}`))
+        /*
+        const img = await promises.readFile(path.join(__dirname, `../Assets/Maps/indoor.png`))
         const imgsha256 = crypto.createHash('sha256').update(img).digest('hex')
         const mapsha256 = crypto.createHash('sha256').update(data).digest('hex')
         console.log('MAP', mapsha256)
         console.log('IMG', imgsha256)
+        */
         map.json = JSON.parse(data.toString())
         await map.initialize()
         return map

@@ -1,3 +1,4 @@
+import { Events } from "matter-js"
 import { Server, Socket } from "socket.io"
 import TiledMap from "./Class/TiledMap"
 import TiledWorld from "./Class/TiledWorld"
@@ -32,7 +33,7 @@ class Game extends Server {
 
         socket.emit('createMap', result)
 
-        this.world.addPlayer(socket)
+        this.world.addPlayer(this.users[socket.id])
         socket.emit('createPlayer', this.users[socket.id])
 
         socket.broadcast.emit('addOtherPlayer', this.users[socket.id])
@@ -46,13 +47,11 @@ class Game extends Server {
         socket.on('keyPressed', (data) => {
             const u = this.users[socket.id]
             this.world.updatePlayerData(u, data)
-            this.emit('updatePosition', u)
         })
 
         socket.on('keyReleased', (data) => {
-            const user = this.users[socket.id]
-            this.world.updatePlayerData(user, data)
-            this.emit('updatePosition', user)
+            const u = this.users[socket.id]
+            this.world.updatePlayerData(u, data)
         })
 
         socket.on('disconnect', () => {
@@ -60,6 +59,10 @@ class Game extends Server {
             this.emit('removeOtherPlayer', this.users[socket.id])
             this.world.removePlayer(this.users[socket.id])
             delete this.users[socket.id]
+        })
+
+        Events.on(this.world._engine, 'beforeUpdate', (e) => {
+            this.emit('users', this.users)
         })
     }
 }

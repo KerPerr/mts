@@ -1,5 +1,4 @@
-import { Engine, Body, Bodies, Runner, Composite, Events } from 'matter-js';
-import { Socket } from 'socket.io';
+import { Engine, Body, Bodies, Composite, Runner } from 'matter-js';
 import TiledMap from './TiledMap';
 import User from "./User";
 
@@ -7,24 +6,15 @@ export default class TiledWorld {
 
     public tiledMap: TiledMap
 
-    private _users: { [uid: string]: User } = {}
     private _players: { [uid: string]: Body } = {}
-    private _sockets: { [uid: string]: Socket } = {}
-
-    private _engine: Engine
+    public _engine: Engine
 
     constructor(data: TiledMap) {
         this.tiledMap = data
         this._engine = Engine.create()
         this._engine.world.gravity.y = 0
+
         Runner.run(this._engine)
-/*
-        Events.on(this._engine, 'beforeUpdate', (event) => {
-            for(const [key, value] of Object.entries(this._users)) {
-                this._sockets[key].emit('updatePosition', value)
-            }
-        })
-*/
     }
 
     addBoxes(x: number, y: number, w: number, h: number): void {
@@ -32,22 +22,18 @@ export default class TiledWorld {
         Composite.add(this._engine.world, box)
     }
 
-    addPlayer(socket: Socket): void {
-        this._sockets[socket.id] = socket
-        let user = new User(socket.id)
-        this._players[socket.id] = Bodies.rectangle(
+    addPlayer(user: User): void {
+        this._players[user.id] = Bodies.rectangle(
             user.position.x+user.width/2,
             user.position.y+user.height/2,
             user.width,
             user.height
         )
         Composite.add(this._engine.world, this._players[user.id])
-        this._users[socket.id] = user
     }
 
     removePlayer(user: User): void {
         Composite.remove(this._engine.world, this._players[user.id])
-        delete this._users[user.id]
         delete this._players[user.id]
     }
 
