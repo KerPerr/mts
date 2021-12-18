@@ -1,2 +1,4 @@
-node_modules
-Xemuth.ts
+matter/node_modules
+phaser/node_modules
+phaser/.parcel-cache
+phaser/dist

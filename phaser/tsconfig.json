@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {
+			"~*": ["./*"]
+		},
+		"module": "commonjs",
+		"target": "es2018",
+		"outDir": "dist",
+		"strict": true,
+		"allowJs": true,
+		"incremental": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+	},
+	"include": [ "src/**/*" ],
+	"exclude": [ "node_modules" ]
+}
