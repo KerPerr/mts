@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import TiledMap from './scenes/TiledMap'
+import TiledMap from './Game/TiledMap'
 import { socket } from './Game/Helper'
 
 socket.on('createMap', (data) => {

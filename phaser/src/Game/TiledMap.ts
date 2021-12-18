@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 
-import User from '../Game/Class/User'
-import Player from '../Game/Class/Player'
+import User from './Class/User'
+import Player from './Class/Player'
 
 export default class TiledMap extends Phaser.Scene {
 
