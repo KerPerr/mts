@@ -62,6 +62,11 @@ class Game extends Server {
         })
 
         Events.on(this.world._engine, 'beforeUpdate', (e) => {
+            for (const [key, value] of Object.entries(this.users)) {
+                const player = this.world._players[key]
+                value.setDirection(player.velocity)
+                value.setPosition(player.position)
+            }
             this.emit('users', this.users)
         })
     }

@@ -1,4 +1,4 @@
-import { Engine, Body, Bodies, Composite, Runner } from 'matter-js';
+import { Engine, Body, Bodies, Composite, Runner, Vector } from 'matter-js';
 import TiledMap from './TiledMap';
 import User from "./User";
 
@@ -6,7 +6,7 @@ export default class TiledWorld {
 
     public tiledMap: TiledMap
 
-    private _players: { [uid: string]: Body } = {}
+    public _players: { [uid: string]: Body } = {}
     public _engine: Engine
 
     constructor(data: TiledMap) {
@@ -23,12 +23,18 @@ export default class TiledWorld {
     }
 
     addPlayer(user: User): void {
-        this._players[user.id] = Bodies.rectangle(
-            user.position.x+user.width/2,
-            user.position.y+user.height/2,
+        let body = Bodies.rectangle(
+            user.position.x,
+            user.position.y,
             user.width,
-            user.height
+            user.height,
+            {
+                restitution: 0,
+                friction: 0,
+                inertia: Infinity
+            }
         )
+        this._players[user.id] = body
         Composite.add(this._engine.world, this._players[user.id])
     }
 
@@ -54,7 +60,8 @@ export default class TiledWorld {
             vy = user.speed
         }
 
-        Body.setVelocity(player, {x: vx, y: vy } )
-        user.setPosition(player.position)
+        let velocity = Vector.create(vx, vy)
+
+        Body.setVelocity(player, Vector.mult(Vector.normalise(velocity), user.speed))
     }
 }
